@@ -2,8 +2,7 @@
 
 ## 1. Model Name  
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+Legato 
 
 ---
 
@@ -11,11 +10,7 @@ Example: **VibeFinder 1.0**
 
 Describe what your recommender is designed to do and who it is for. 
 
-Prompts:  
-
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+The recommender predicts which songs in the catalog a user will like best by scoring each one on how closely its genre, mood, and audio features match the user's stated taste profile, then suggesting the top-ranked matches.
 
 ---
 
@@ -23,52 +18,27 @@ Prompts:
 
 Explain your scoring approach in simple language.  
 
-Prompts:  
-
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
-
+Each song earns points for matching the user's favorite genre and mood, plus extra points the closer its energy, tempo, valence, danceability, and acousticness are to what the user prefers, and the songs with the most points are recommended first.
 ---
 
 ## 4. Data  
 
 Describe the dataset the model uses.  
 
-Prompts:  
-
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
-
+The dataset is a small, hand-crafted catalog each labeled with genre (pop, rock, lofi, hip hop, trap, rap, edm, and more), mood, and five numeric audio features (energy, tempo, valence, danceability, acousticness).
 ---
 
 ## 5. Strengths  
 
 Where does your system seem to work well  
 
-Prompts:  
-
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
-
----
+It works best when a user's profile closely matches an existing song's genre, mood, and numeric feel—like the pop/happy or edm/euphoric tests, where the correct song reliably scored highest with clear reasons.
 
 ## 6. Limitations and Bias 
 
 Where the system struggles or behaves unfairly. 
 
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+It needs more fine tuning and larger data set to learn from and can be tricked easily.
 
 ---
 
@@ -76,14 +46,7 @@ Prompts:
 
 How you checked whether the recommender behaved as expected. 
 
-Prompts:  
-
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
-
-No need for numeric metrics unless you created some.
+Works fine as expected for proof of concept.
 
 ---
 
@@ -91,12 +54,7 @@ No need for numeric metrics unless you created some.
 
 Ideas for how you would improve the model next.  
 
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
+Next steps would be to make feature weights configurable (or learned) instead of fixed, add diversity so top-k isn't all near-duplicates, and expand the catalog with more genres/moods to reduce overfitting to a tiny dataset.
 
 ---
 
@@ -104,8 +62,4 @@ Prompts:
 
 A few sentences about your experience.  
 
-Prompts:  
-
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+Learned a lot about defining a problem and discovering context and then designing a system before implementation and then evaluating and how it all works together.  

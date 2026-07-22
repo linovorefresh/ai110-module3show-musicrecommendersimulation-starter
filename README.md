@@ -11,23 +11,33 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
+
 Replace this paragraph with your own summary of what your version does.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world recommenders like Spotify's or Netflix's typically blend two ideas: **collaborative filtering**, which recommends things based on what similar *users* liked, and **content-based filtering**, which recommends things based on how similar an *item* is to what a user already prefers. Collaborative filtering can surface surprising discoveries but needs lots of user history to work and struggles with brand-new users or songs (the "cold start" problem). This project only implements the content-based half: instead of learning from other listeners, it compares each song's own attributes directly against one user's stated taste profile. That tradeoff means every recommendation is easy to explain (traceable to specific feature matches) and works even with a single user and a tiny catalog, but it also means the system will keep recommending "more of the same" and can never suggest something outside a user's declared preferences.
 
-Some prompts to answer:
+This version prioritizes **similarity over magnitude** — a song is not scored higher just because it has more energy or a faster tempo, only because its values sit *closer* to what the user asked for. Categorical traits (genre, mood) are scored as a match or non-match, while numeric traits (energy, tempo, valence, danceability, acousticness) are scored by how small the difference is between the song's value and the user's target value. All feature scores are combined into one overall score per song, and the catalog is ranked from closest match to furthest.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+**Song** features used in scoring:
+- `genre` (categorical match)
+- `mood` (categorical match)
+- `energy` (numeric closeness)
+- `tempo_bpm` (numeric closeness, normalized before comparing since it has a much larger range than the other 0–1 features)
+- `valence` (numeric closeness)
+- `danceability` (numeric closeness)
+- `acousticness` (numeric closeness)
 
-You can include a simple diagram or bullet list if helpful.
+**UserProfile** information used as the comparison target:
+- `favorite_genre` — matched against each song's `genre`
+- `favorite_mood` — matched against each song's `mood`
+- `target_energy` — the preferred energy level a song's `energy` is compared to
+- `likes_acoustic` — a preference signal used alongside `acousticness` closeness
+
+The `Recommender` scores every song against these targets, combines the per-feature similarity scores into a single overall score, sorts songs from highest to lowest, and returns the top `k` as the recommendations.
 
 ---
 
@@ -68,15 +78,25 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+Ran with the starter profile from `src/main.py` (`{"genre": "pop", "mood": "happy", "energy": 0.8}`) against the current `data/songs.csv` catalog:
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+Top recommendations:
+
+Sunrise City - Score: 4.48
+Because: genre match (+2.0), mood match (+1.5), energy similarity (+0.98)
+
+Gym Hero - Score: 2.87
+Because: genre match (+2.0), energy similarity (+0.87)
+
+Rooftop Lights - Score: 2.46
+Because: mood match (+1.5), energy similarity (+0.96)
+
+Concrete Kingdom - Score: 0.98
+Because: energy similarity (+0.98)
+
+Corner Store Legend - Score: 0.95
+Because: energy similarity (+0.95)
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
